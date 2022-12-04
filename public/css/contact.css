@@ -1,0 +1,16 @@
+#form-contact {
+    display: flex;
+    flex-direction: column;
+}
+
+#form-contact label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.error {
+    display: none;
+    color: #a00;
+    padding: .5rem;
+}

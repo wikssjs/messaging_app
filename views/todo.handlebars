@@ -1,0 +1,18 @@
+<ul id="liste-todo">
+    {{#each todos}}
+        <li>
+            <input 
+                type="checkbox" 
+                data-id="{{this.id_todo}}"
+                {{#if this.est_coche}}checked{{/if}}>
+            <div class="texte">{{this.texte}}</div>
+        </li>
+    {{/each}}
+</ul>
+
+{{#if aAcces}}
+<form id="form-todo">
+    <input type="text" id="textbox-todo">
+    <input type="submit" value="Ajouter">
+</form>
+{{/if}}

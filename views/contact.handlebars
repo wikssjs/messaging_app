@@ -1,0 +1,36 @@
+<h2>Contact</h2>
+
+<form id="form-contact" novalidate>
+    <label>
+        Nom complet *
+        <input type="text" id="nom" required>
+        <div id="error-nom" class="error"></div>
+    </label>
+
+    <label>
+        Âge
+        <input type="number" id="age" min="1" max="150">
+        <div id="error-age" class="error"></div>
+    </label>
+
+    <label>
+        Courriel *
+        <input type="email" id="courriel" required>
+        <div id="error-courriel" class="error"></div>
+    </label>
+
+    <!--
+    <label>
+        Code postal (Q1Q1Q1)
+        <input type="text" id="postal" pattern="^([a-zA-Z][0-9]){3}$">
+    </label>
+    -->
+
+    <label>
+        Message *
+        <textarea id="message" required minlength="10" maxlength="200"></textarea>
+        <div id="error-message" class="error"></div>
+    </label>
+
+    <input type="submit" value="Envoyer">
+</form>
