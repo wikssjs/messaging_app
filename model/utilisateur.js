@@ -8,7 +8,7 @@ export const addUtilisateur = async (username, password) => {
 
     await connexion.run(
         `INSERT INTO utilisateur (username, password, id_type_utilisateur)
-        VALUES (?, ?, 0)`,
+        VALUES (?, ?, 1)`,
         [username, passwordHash]
     );
 }

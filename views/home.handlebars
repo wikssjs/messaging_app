@@ -1,21 +1,45 @@
 <main class="">
     <h1 class="text-light text-center">Group Message</h1>
 
-    <div class="container border border-primary d-flex flex-column w-50" style="height:800px ;">
+    <div class="container border border-primary d-flex flex-column w-50" style="height:550px ;">
 
-        <div id="message-container" class="m-2">
-           
-           {{#each messages}}
-           <div class="bg-light w-25 rounded" id="message-wrapper">
-            <span class="p-4" id="user">{{this.username}}</span>
-            <p id="message" class="p-4">{{this.message}}</p>
-           </div>
-           {{/each}}
+        <div id="message-container" class="m-2 overflow-auto">
+
+            {{#each messages}}
+            {{#if ../isCurrentUser}}
+            <div class="bg-light w-25 rounded" id="message-wrapper" data-id="{{this.id_message}}">
+                <div class="d-flex justify-content-between">
+                    <span class="p-2 text-success" id="user">{{this.username}}</span>
+                    {{#if ../isAdmin}}
+                    <button id="btn-delete-message" data-id="{{this.id_message}}"
+                        class="p-2 text-danger justify-content-between">Delete</button>
+                    {{/if}}
+                </div>
+                <p id="message" class="p-4">{{this.message}}</p>
+            </div>
+            {{else}}
+            <div class="bg-danger w-25 rounded " id="message-wrapper" data-id="{{this.id_message}}">
+                <div class="d-flex justify-content-between">
+                    <span class="p-2 text-success" id="user">{{this.username}}</span>
+                    {{#if ../isAdmin}}
+                    <button id="btn-delete-message" data-id="{{this.id_message}}"
+                        class="p-2 text-danger justify-content-between">Delete</button>
+                    {{/if}}
+                </div>
+                <p id="message" class="p-4">{{this.message}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
         </div>
 
         <form action="" class="align-self-end mt-auto" id="message-form">
-            <input style="width:500px ;" type="text" name="" id="form-message-input" class="rounded p-2" >
-            <input type="submit" name="" id="" class="btn btn-primary">
+            <label>
+                <input style="width:500px ;" type="text" name="" id="form-message-input" class="rounded p-2">
+            </label>
+            <label>
+                <input type="submit" name="" id="" class="btn btn-primary">
+                    {{isCurrentUser}}
+            </label>
         </form>
     </div>
 </main>

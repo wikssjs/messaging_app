@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express, { json, request, response } from 'express';
+import express, { json, request} from 'express';
 import { engine } from 'express-handlebars';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -8,7 +8,7 @@ import session from 'express-session';
 import memorystore from 'memorystore';
 import passport from 'passport';
 import middlewareSse from './middleware-sse.js';
-import {getMessages,addMessage} from './model/todo.js';
+import {getMessages,addMessage,deleteMessage} from './model/todo.js';
 import { addUtilisateur } from './model/utilisateur.js';
 import { validateContact } from './validation.js';
 import './authentification.js';
@@ -64,14 +64,15 @@ app.use(express.static('public'));
 app.get('/', async (request, response) => {
 
     if(request.user){
-
+        console.log(request.user?.id_type_utilisateur>1)
         response.render('home', {
-            titre: 'Message',
+            titre: 'Groupe Conversation',
             scripts: ['/js/home.js'],
             user: request.user,
+            isAdmin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(),
             accept: request.session.accept,
-            argent: 213
+            isCurrentUser:request.user.username == request.user.username
         });
     }
     else{
@@ -79,6 +80,40 @@ app.get('/', async (request, response) => {
     }
     
 })
+
+app.get('/home', async (request, response) => {
+
+    if(request.user){
+        console.log(request.user?.id_type_utilisateur>1)
+        response.render('home', {
+            titre: 'Groupe Conversation',
+            scripts: ['/js/home.js'],
+            user: request.user,
+            isAdmin:request.user?.id_type_utilisateur>1,
+            messages:await getMessages(),
+            accept: request.session.accept,
+            isCurrentUser:request.user.username == request.user.username
+        });
+        console.log(request.user.username);
+    }
+    else{
+        response.redirect('/connexion')
+    }
+    
+})
+
+
+app.delete('/home',async (request,response)=>{
+    if(request.user?.id_utilisateur>1){
+        deleteMessage(request.body.idMessage)
+
+    }
+    response.pushJson({
+       id_message :request.body.idMessage
+    },'delete-message');
+})
+
+console.log()
 
 app.get('/apropos', (request, response) => {
     if(request.session.countAPropos === undefined) {
@@ -153,7 +188,9 @@ app.post('/message',async(request,response)=>{
         
         response.pushJson({
             username: request.user.username,
-            message: request.body.message
+            message: request.body.message,
+            id_type_utilisateur: request.user.id_type_utilisateur,
+            id_message:request.body.id_message
         },'add-message');
     }
 
@@ -161,8 +198,15 @@ app.post('/message',async(request,response)=>{
 })
 
 
-
 app.get('/stream', (request, response) => {
+    if(request.user) {
+        response.initStream();
+    }
+    else {
+        response.status(401).end();
+    }
+});
+app.get('/stream1', (request, response) => {
     if(request.user) {
         response.initStream();
     }

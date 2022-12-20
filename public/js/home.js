@@ -1,59 +1,113 @@
 
 let container = document.getElementById('message-container');
 let wrapper = document.getElementById('message-wrapper');
+let btnDelete = document.querySelectorAll('#btn-delete-message');
+let AllMessageWrapper = document.querySelectorAll('#message-wrapper');
 // let user = document.getElementById('user');
 // let message = document.getElementById('message')
+
+
+container.scrollTop = container.scrollHeight;
 
 const formMessage = document.getElementById('message-form');
 const inputMessage = document.getElementById('form-message-input');
 
 
+const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage) => {
+    let deleteElement;
+    console.log(idTypeUtilisateur);
+    if (idTypeUtilisateur > 1) {
 
-const addMessageCLient=(username,txtMessage)=>{
-    
-   let  span = document.createElement('span');
-   span.innerText = username;
+        deleteElement = ` <button id="btn-delete-message" data-id="${idMessage}" class="p-2 text-danger justify-content-between">Delete</button>`;
+    }
+    else {
+        deleteElement = '';
+    }
 
-    let p = document.createElement('p');
-    p.innerText = txtMessage;
+    console.log(deleteElement);
 
-    span.classList.add('p-4')
-    p.classList.add('p-4')
-    wrapper.append(span);
-    wrapper.append(p);
+    container.innerHTML += `
+    <div class="bg-light w-25 rounded " id="message-wrapper" data-id="${idMessage}">
+    <div class="d-flex justify-content-between">
+        <span class="p-2 text-success" id="user">${username}</span>
+        ${deleteElement}
+    </div>
+    <p id="message" class="p-4">${txtMessage}</p>
+</div>`
 
-    wrapper.classList.add('bg-light')
-    wrapper.classList.add('w-25')
-    wrapper.classList.add('rounded')
-    container.append(wrapper);
+    container.scrollTop = container.scrollHeight;
+
 }
 
 
-const addMessage = async (event)=>{
+const addMessage = async (event) => {
     event.preventDefault();
-    
+
     let data = {
-        message:inputMessage.value,
+        message: inputMessage.value,
     }
-    
-    
-    
-    
-     await fetch('/message', {
+
+
+
+
+    let response = await fetch('/message', {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
-    
+
+    if (response.ok) {
+        alert('ok')
+        container.scrollTop = container.scrollHeight;
+    }
+
 
 }
 
 let source = new EventSource('/stream')
 
-source.addEventListener('add-message',(event)=>{
+source.addEventListener('add-message', (event) => {
     let data = JSON.parse(event.data);
     console.log(data);
-    addMessageCLient(data.username,data.message);
+    addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message);
+})
+formMessage.addEventListener('submit', addMessage);
+
+
+const deleteMessageClient = (idMessage) => {
+
+    for (let i = 0; i < AllMessageWrapper.length; i++) {
+        if (AllMessageWrapper[i].dataset.id == idMessage) {
+            AllMessageWrapper[i].remove();
+        }
+    }
+}
+let source1 = new EventSource('/stream1')
+
+source1.addEventListener('delete-message', (event) => {
+    let data = JSON.parse(event.data);
+    console.log(data);
+    deleteMessageClient(data.id_message);
 })
 
-formMessage.addEventListener('submit',addMessage);
+const deleteMessage = async (id) => {
+    let data = {
+        idMessage: id
+    }
+
+
+    await fetch('/home', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+}
+
+
+
+for (let i = 0; i < btnDelete.length; i++) {
+    btnDelete[i].addEventListener('click', () => {
+        deleteMessage(btnDelete[i].dataset.id);
+    });
+}
