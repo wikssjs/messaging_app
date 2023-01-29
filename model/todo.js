@@ -1,3 +1,4 @@
+import { addMessage1 } from '../firebase.js';
 import {promesseConnexion} from './connexion.js';
 
 
@@ -13,7 +14,6 @@ export const getMessages = async()=>{
 
 export const addMessage = async (message,id_utilisateur)=>{
     let connexion = await promesseConnexion;
-
     connexion.run(
         `InSERT INTO message (message,id_utilisateur)
         Values(?,?)`,[message,id_utilisateur]

@@ -1,6 +1,4 @@
-NODE_ENV=development
-PORT=3000
-CODE={
+{
     "apiKey": "AIzaSyCl_VVipK_yoyZnyLywPUB53EazPRMS-NU",
     "authDomain": "message-330ba.firebaseapp.com",
     "databaseURL": "https://message-330ba-default-rtdb.firebaseio.com",
@@ -10,7 +8,3 @@ CODE={
     "appId": "1:301079217137:web:67723f647818d05380ba50",
     "measurementId": "G-TJ4BW67WW9"
   }
-
-
-DB_FILE= msg.db
-SESSION_SECRET=wu5ft845yt837y854hw78bvh84bgvwhoityotywo785y4vsghlerisygblsrg

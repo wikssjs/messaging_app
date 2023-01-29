@@ -1,59 +1,66 @@
-// Ensemble de connexions
-let connexions = new Set();
+// Set of connections
+let connections = new Set();
 
-// Identifiant courant des messages
+// Current message id
 let currentId = 0;
 
 export default function middlewareSse() {
-    return (request, response, next) => {
-        /**
-         * Initialiser la connexion avec le client
-         */
-        response.initStream = () => {
-            // Retourner le stream au client
-            response.writeHead(200, {
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'text/event-stream',
-                'Connection': 'keep-alive'
-            });
+  return (request, response, next) => {
+    /**
+     * Initialize the connection with the client
+     */
+    response.initStream = () => {
+      // Return the stream to the client
+      response.writeHead(200, {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive'
+      });
 
-            // Ajouter la connexion à notre ensemble
-            connexions.add(response);
+      // Add the connection to our set
+      connections.add(response);
 
-            // Boucle pour garder la connexion en vie
-            const intervalId = setInterval(() => {
-                response.write(':\n\n');
-                response.flush();
-            }, 30000);
+      // Keep the connection alive
+      const keepAliveIntervalId = setInterval(() => {
+        response.write(':keep-alive\n\n');
+        response.flush();
+      }, 0);
 
-            // Arrêter la boucle si le client stop la connexion
-            response.on('close', () => {
-                connexions.delete(response);
-                clearInterval(intervalId);
-                response.end();
-            });
-        };
+      // Stop the keep-alive loop if the client closes the connection
+      response.on('close', () => {
+        connections.delete(response);
+        clearInterval(keepAliveIntervalId);
+        response.end();
+      });
 
-        /**
-         * Envoyer des objets sous le format JSON à tous le clients
-         */
-        response.pushJson = (data, eventName) => {
-            // Bâtir la chaîne de données
-            let dataString = 
-                `id: ${ currentId }\n` + 
-                `data: ${ JSON.stringify(data) }\n` + 
-                (eventName ? `event: ${ eventName }\n\n` : '\n');
+      response.on('error', (error) => {
+        connections.delete(response);
+        clearInterval(keepAliveIntervalId);
+        response.end();
+        console.error(error);
+      });
+    };
 
-            // Envoyer les données à toutes les connexions
-            for(let connexion of connexions){
-                connexion.write(dataString);
-                connexion.flush();
-            }
+    /**
+     * Send JSON objects to all clients
+     */
+    response.pushJson = (data, eventName) => {
+      // Build the data string
+      let dataString =
+        `id: ${currentId}\n` +
+        `data: ${JSON.stringify(data)}\n` +
+        (eventName ? `event: ${eventName}\n\n` : '\n');
 
-            currentId++;
-        };
+      // Send the data to all connections
+      for (let connection of connections) {
+        connection.write(dataString);
+        connection.flush();
+      }
 
-        // Passer au prochain middleware
-        next();
-    }
+      currentId++;
+    };
+
+    // Move on to the next middleware
+    next();
+  };
 }

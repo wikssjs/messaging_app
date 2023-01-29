@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express, { json, request} from 'express';
+import express, { json} from 'express';
 import { engine } from 'express-handlebars';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -9,15 +9,31 @@ import memorystore from 'memorystore';
 import passport from 'passport';
 import middlewareSse from './middleware-sse.js';
 import {getMessages,addMessage,deleteMessage} from './model/todo.js';
-import { addUtilisateur } from './model/utilisateur.js';
+import { addUtilisateur, isUserEquals } from './model/utilisateur.js';
 import { validateContact } from './validation.js';
 import './authentification.js';
+import {initializeApp} from "firebase/app";
+import {getDatabase,onValue,ref,set} from "firebase/database";
 
-console.log(await getMessages());
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyCl_VVipK_yoyZnyLywPUB53EazPRMS-NU",
+    authDomain: "message-330ba.firebaseapp.com",
+    databaseURL: "https://message-330ba-default-rtdb.firebaseio.com",
+    projectId: "message-330ba",
+    storageBucket: "message-330ba.appspot.com",
+    messagingSenderId: "301079217137",
+    appId: "1:301079217137:web:343adad44adcc4da80ba50",
+    measurementId: "G-B6H673DPLK"
+  };
+
+  var app1 = initializeApp(firebaseConfig)
+
+const db = getDatabase(app1);
+
 
 // Création du serveur web
 let app = express();
-
 // Création de l'engin dans Express
 app.engine('handlebars', engine({
     helpers: {
@@ -30,6 +46,7 @@ app.engine('handlebars', engine({
                 return null;
             }
         }*/
+        
     }
 }));
 
@@ -62,9 +79,10 @@ app.use(express.static('public'));
 
 // Programmation de routes
 app.get('/', async (request, response) => {
-
+    
+    let a = await getMessages();
     if(request.user){
-        console.log(request.user?.id_type_utilisateur>1)
+        console.log(await isUserEquals(request.user.username));
         response.render('home', {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js'],
@@ -72,7 +90,7 @@ app.get('/', async (request, response) => {
             isAdmin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(),
             accept: request.session.accept,
-            isCurrentUser:request.user.username == request.user.username
+            isCurrentUser: await isUserEquals(request.user.username) ,
         });
     }
     else{
@@ -83,8 +101,8 @@ app.get('/', async (request, response) => {
 
 app.get('/home', async (request, response) => {
 
+    console.log(await isUserEquals(request.user.username))
     if(request.user){
-        console.log(request.user?.id_type_utilisateur>1)
         response.render('home', {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js'],
@@ -92,9 +110,8 @@ app.get('/home', async (request, response) => {
             isAdmin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(),
             accept: request.session.accept,
-            isCurrentUser:request.user.username == request.user.username
+            isCurrentUser: await isUserEquals(request.user.username) ,
         });
-        console.log(request.user.username);
     }
     else{
         response.redirect('/connexion')
@@ -112,8 +129,6 @@ app.delete('/home',async (request,response)=>{
        id_message :request.body.idMessage
     },'delete-message');
 })
-
-console.log()
 
 app.get('/apropos', (request, response) => {
     if(request.session.countAPropos === undefined) {
@@ -184,20 +199,35 @@ app.post('/message',async(request,response)=>{
         response.status(401).end();
     }
     else{
-        await addMessage(request.body.message,request.user.id_utilisateur)
-        
-        response.pushJson({
-            username: request.user.username,
+        await addMessage(request.body.message,request.user.id_utilisateur)    
+        set(ref(db,'message'),{
+            username:request.user.username,
             message: request.body.message,
-            id_type_utilisateur: request.user.id_type_utilisateur,
-            id_message:request.body.id_message
-        },'add-message');
+            idTypeUtilisateur:request.user.id_type_utilisateur,
+            idMessage:1
+            
+        });  
+         response.pushJson({
+             username: request.user.username,
+             message: request.body.message,
+             id_type_utilisateur: request.user.id_type_utilisateur,
+             id_message:request.body.id_message
+         },'add-message');
     }
 
 
 })
+let james ;
+const me = ref(db,'message');
+    onValue(me,async(data)=>{
+        james=data.val();
+        console.log(await data.val())
+    })
+    app.get('/james',(request,response)=>{
 
-
+     response.send(james)
+   
+ })
 app.get('/stream', (request, response) => {
     if(request.user) {
         response.initStream();

@@ -25,3 +25,22 @@ export const getUtilisateurByUsername = async (username) => {
 
     return utilisateur;
 }
+
+export const isUserEquals = async (username) =>{
+    let connexion = await promesseConnexion;
+    let allUsers  = [];
+
+   let utilisateurs = await connexion.all( `select  username from utilisateur u, message m 
+                        where u.id_utilisateur = m.id_utilisateur`)
+
+    for(let i = 0;i<utilisateurs.length;i++){
+
+        if(utilisateurs[i].username === username){
+            allUsers.push(true);
+        }
+        else{
+            allUsers.push(false);
+        }
+    }
+    return allUsers;
+}

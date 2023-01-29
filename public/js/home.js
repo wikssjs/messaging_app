@@ -1,4 +1,3 @@
-
 let container = document.getElementById('message-container');
 let wrapper = document.getElementById('message-wrapper');
 let btnDelete = document.querySelectorAll('#btn-delete-message');
@@ -13,7 +12,7 @@ const formMessage = document.getElementById('message-form');
 const inputMessage = document.getElementById('form-message-input');
 
 
-const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage) => {
+export const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage) => {
     let deleteElement;
     console.log(idTypeUtilisateur);
     if (idTypeUtilisateur > 1) {
@@ -49,7 +48,6 @@ const addMessage = async (event) => {
 
 
 
-
     let response = await fetch('/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,38 +55,39 @@ const addMessage = async (event) => {
     });
 
     if (response.ok) {
-        alert('ok')
-        container.scrollTop = container.scrollHeight;
+        //  let res = await fetch('/james');
+        //  let data = await res.json();
+        //  addMessageCLient(data.username,data.message,data.idTypeUtilisateur,1)
     }
-
-
 }
 
-let source = new EventSource('/stream')
 
-source.addEventListener('add-message', (event) => {
-    let data = JSON.parse(event.data);
-    console.log(data);
-    addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message);
-})
+ let source = new EventSource('/stream')
+
+ source.addEventListener('add-message', (event) => {
+     let data = JSON.parse(event.data);
+     console.log(data);
+     addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message);
+ })
+
 formMessage.addEventListener('submit', addMessage);
 
 
-const deleteMessageClient = (idMessage) => {
+ const deleteMessageClient = (idMessage) => {
 
-    for (let i = 0; i < AllMessageWrapper.length; i++) {
-        if (AllMessageWrapper[i].dataset.id == idMessage) {
-            AllMessageWrapper[i].remove();
-        }
-    }
-}
-let source1 = new EventSource('/stream1')
+     for (let i = 0; i < AllMessageWrapper.length; i++) {
+         if (AllMessageWrapper[i].dataset.id == idMessage) {
+             AllMessageWrapper[i].remove();
+         }
+     }
+ }
+ let source1 = new EventSource('/stream1')
 
-source1.addEventListener('delete-message', (event) => {
-    let data = JSON.parse(event.data);
-    console.log(data);
-    deleteMessageClient(data.id_message);
-})
+ source1.addEventListener('delete-message', (event) => {
+     let data = JSON.parse(event.data);
+     console.log(data);
+     deleteMessageClient(data.id_message);
+ })
 
 const deleteMessage = async (id) => {
     let data = {
