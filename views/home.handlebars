@@ -1,34 +1,130 @@
-<main class="">
-    <h1 class="text-light text-center">Group Message</h1>
-
-    <div class="container border border-primary d-flex flex-column w-50" style="height:550px ;">
-
-        <div id="message-container" class="m-2 overflow-auto">
-
-            {{#each messages}}
-
-
-        
-            <div class="bg-light w-25 rounded" id="message-wrapper" data-id="{{this.id_message}}">
-                <div class="d-flex justify-content-between">
-                    <span class="p-2 text-success" id="user">{{this.username}}</span>
-                    {{#if ../isAdmin}}
-                    <button id="btn-delete-message" data-id="{{this.id_message}}"
-                        class="p-2 text-danger justify-content-between">Delete</button>
-                    {{/if}}
-                </div>
-                <p id="message" class="p-4">{{this.message}}</p>
+<!-- component -->
+<!-- This is an example component -->
+<div class="container mx-auto shadow-lg rounded-lg h-1/4">
+    <!-- headaer -->
+    <!-- end header -->
+    <!-- Chatting -->
+    <div class="flex flex-row justify-between bg-black h-1/5">
+        <!-- chat list -->
+        <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+            <!-- search compt -->
+            <div class="border-b-2 py-4 px-2">
+                <input type="text" placeholder="search chatting"
+                    class="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full" />
             </div>
-            {{/each}}
-        </div>
+            <!-- end search compt -->
+            <!-- user list -->
+            <div class="flex flex-row py-4 px-2 justify-center items-center border-b-2">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">Luis1994</div>
+                    <span class="text-gray-500">Pick me at 9:00 Am</span>
+                </div>
+            </div>
+            <div class="flex flex-row py-4 px-2 items-center border-b-2">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/otT2199XwI8/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">Everest Trip 2021</div>
+                    <span class="text-gray-500">Hi Sam, Welcome</span>
+                </div>
+            </div>
+            <div class="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-blue-400">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">MERN Stack</div>
+                    <span class="text-gray-500">Lusi : Thanks Everyone</span>
+                </div>
+            </div>
+            <div class="flex flex-row py-4 px-2 items-center border-b-2">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">Javascript Indonesia</div>
+                    <span class="text-gray-500">Evan : some one can fix this</span>
+                </div>
+            </div>
+            <div class="flex flex-row py-4 px-2 items-center border-b-2">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">Javascript Indonesia</div>
+                    <span class="text-gray-500">Evan : some one can fix this</span>
+                </div>
+            </div>
 
-        <form action="" class="align-self-end mt-auto position" id="message-form">
-            <label>
-                <input style="width:500px ;" type="text" name="" id="form-message-input" class="rounded p-2">
-            </label>
-            <label>
-                <input type="submit" name="" id="" class="btn btn-primary">
-            </label>
-        </form>
+            <div class="flex flex-row py-4 px-2 items-center border-b-2">
+                <div class="w-1/4">
+                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                </div>
+                <div class="w-full">
+                    <div class="text-lg font-semibold">Javascript Indonesia</div>
+                    <span class="text-gray-500">Evan : some one can fix this</span>
+                </div>
+            </div>
+            <!-- end user list -->
+        </div>
+        <!-- end chat list -->
+        <!-- message -->
+        <div class="message_container w-full px-5 flex flex-col justify-between">
+            <div class="flex flex-col mt-5 overflow-y-scroll bg-blue-600" id="message_wrapper">
+                {{#each messages}}
+                <div class="flex justify-end mb-4 mt-5">
+                    <div class="w-full ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
+                        <span class=" text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
+                        <p class=" text-lg">{{this.message}}</p>
+
+                        <span class="absolute right-0 bottom-0 text-gray-600 font-light">9-03Am</span>
+                    </div>
+                </div>
+
+                {{!-- {{#isCurrentUser this.username}}
+                <div class="flex justify-end mb-4">
+                    <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                        <span>{{this.username}}</span>
+                        <p>{{this.message}}</p>
+
+                        <span class="ml-10">9-03Am</span>
+                    </div>
+                </div>
+                {{else}}
+                <div class="flex justify-end flex-row-reverse mb-4">
+                    <div class="mr-2 py-3 px-4 bg-red-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                        <span>{{this.username}}</span>
+                        <p>{{this.message}}</p>
+
+                        <span class="ml-10">9-03Am</span>
+
+                    </div>
+                </div>
+                {{/isCurrentUser}} --}}
+                {{/each}}
+            </div>
+            <div class="py-5">
+                <form id="message-form" action="" class="flex justify-between bg-red-">
+                    <input class="w-3/4 bg-gray-300 py-5 px-3 rounded-xl" type="text"
+                        placeholder="type your message here..." id="form-message-input" />
+                    <button type="submit" value="Envoyer" class="bg-blue-700 rounded w-1/5 text-lg hover:text-white"><i
+                            class="fa-solid fa-paper-plane text-xl"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- end message -->
     </div>
-</main>
+
+
+</div>
