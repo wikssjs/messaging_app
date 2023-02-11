@@ -1,4 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('../node_modules/font-awesome/css/font-awesome.min.css');
+
+
 #btn-delete-message{
     background: none;
     border: none;
+    background-color:aqua ;
+}
+
+.message_container{
+    max-height: 80vh;
+}
+
+#message_wrapper{
+    height: 1000px;
+}
+
+#form_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 88vh;
+}
+
+#auth_form{
+    width: 200%;
+    height: 100%;
+    background-color: yellow;
+}
+
+#message{
+    border-radius: 20px;
+}
+
+#message span{
+    right:2%;
+    bottom: 2%;
+}
+
+#form-message-input{
+    border-radius: 20px;
 }

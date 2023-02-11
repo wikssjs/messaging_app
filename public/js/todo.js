@@ -76,3 +76,8 @@ source.addEventListener('check-todo', (event) => {
     let checkbox = document.querySelector(`input[data-id="${data.id}"]`);
     checkbox.checked = !checkbox.checked; 
 });
+
+
+//write a fucntion to reverse a table
+
+//write a function to revers

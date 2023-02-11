@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { json} from 'express';
 import { engine } from 'express-handlebars';
+import Handlebars from 'handlebars';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
@@ -12,26 +13,11 @@ import {getMessages,addMessage,deleteMessage} from './model/todo.js';
 import { addUtilisateur, isUserEquals } from './model/utilisateur.js';
 import { validateContact } from './validation.js';
 import './authentification.js';
-import {initializeApp} from "firebase/app";
-import {getDatabase,onValue,ref,set} from "firebase/database";
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: "AIzaSyCl_VVipK_yoyZnyLywPUB53EazPRMS-NU",
-    authDomain: "message-330ba.firebaseapp.com",
-    databaseURL: "https://message-330ba-default-rtdb.firebaseio.com",
-    projectId: "message-330ba",
-    storageBucket: "message-330ba.appspot.com",
-    messagingSenderId: "301079217137",
-    appId: "1:301079217137:web:343adad44adcc4da80ba50",
-    measurementId: "G-B6H673DPLK"
-  };
-
-  var app1 = initializeApp(firebaseConfig)
-
-const db = getDatabase(app1);
 
 
+
+
+let users=[];
 // Création du serveur web
 let app = express();
 // Création de l'engin dans Express
@@ -47,8 +33,17 @@ app.engine('handlebars', engine({
             }
         }*/
         
-    }
+    },
 }));
+
+Handlebars.registerHelper('isCurrentUser', function (username, options) {
+  if (String(username) === String(options.data.root.currentUser)) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
+
 
 // Mettre l'engin handlebars comme engin de rendu
 app.set('view engine', 'handlebars');
@@ -85,12 +80,13 @@ app.get('/', async (request, response) => {
         console.log(await isUserEquals(request.user.username));
         response.render('home', {
             titre: 'Groupe Conversation',
-            scripts: ['/js/home.js'],
+            scripts: ['/js/home.js',"/css/main.css"],
             user: request.user,
             isAdmin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(),
             accept: request.session.accept,
             isCurrentUser: await isUserEquals(request.user.username) ,
+            currentUser:request.user.username
         });
     }
     else{
@@ -118,7 +114,6 @@ app.get('/home', async (request, response) => {
     }
     
 })
-
 
 app.delete('/home',async (request,response)=>{
     if(request.user?.id_utilisateur>1){
@@ -160,8 +155,8 @@ app.get('/contact', (request, response) => {
 });
 
 app.get('/inscription', (request, response) => {
-    response.render('authentification', {
-        titre: 'Inscription',
+    response.render('inscription', {
+        titre: 'inscription',
         scripts: ['/js/inscription.js'],
         user: request.user,
         accept: request.session.accept
@@ -169,7 +164,7 @@ app.get('/inscription', (request, response) => {
 });
 
 app.get('/connexion', (request, response) => {
-    response.render('authentification', {
+    response.render('connexion', {
         titre: 'Connexion',
         scripts: ['/js/connexion.js'],
         user: request.user,
@@ -199,35 +194,22 @@ app.post('/message',async(request,response)=>{
         response.status(401).end();
     }
     else{
-        await addMessage(request.body.message,request.user.id_utilisateur)    
-        set(ref(db,'message'),{
-            username:request.user.username,
-            message: request.body.message,
-            idTypeUtilisateur:request.user.id_type_utilisateur,
-            idMessage:1
-            
-        });  
-         response.pushJson({
-             username: request.user.username,
-             message: request.body.message,
-             id_type_utilisateur: request.user.id_type_utilisateur,
-             id_message:request.body.id_message
-         },'add-message');
+        if(request.body.message!=""){
+
+            await addMessage(request.body.message,request.user.id_utilisateur)    
+             response.pushJson({
+                 username: request.user.username,
+                 message: request.body.message,
+                 id_type_utilisateur: request.user.id_type_utilisateur,
+                 id_message:request.body.id_message,
+             },'add-message');
+        }
+
     }
 
 
 })
-let james ;
-const me = ref(db,'message');
-    onValue(me,async(data)=>{
-        james=data.val();
-        console.log(await data.val())
-    })
-    app.get('/james',(request,response)=>{
 
-     response.send(james)
-   
- })
 app.get('/stream', (request, response) => {
     if(request.user) {
         response.initStream();
@@ -287,6 +269,8 @@ app.post('/connexion', (request, response, next) => {
                         next(error);
                     }
                     else {
+                        users.push(utilisateur.username)
+                        console.log(users)
                         response.status(200).end();
                     }
                 });

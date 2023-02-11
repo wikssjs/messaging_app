@@ -1,4 +1,3 @@
-import { addMessage1 } from '../firebase.js';
 import {promesseConnexion} from './connexion.js';
 
 
