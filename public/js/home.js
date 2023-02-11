@@ -11,10 +11,10 @@ const inputMessage = document.getElementById('form-message-input');
 
 container.scrollTop  = container.scrollHeight
 
-export const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage) => {
-
     const date = new Date();
     let currentDate = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+
+export const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage,time) => {
     console.log(username)
     // let deleteElement;
     // console.log(idTypeUtilisateur);
@@ -32,7 +32,7 @@ export const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMess
         <span class=" text-red-800 text-xl font-bold pb-5">${username}</span>
         <p class=" text-lg">${txtMessage}</p>
 
-        <span class="absolute right-0 bottom-0 text-gray-600 font-light">${currentDate}</span>
+        <span class="absolute right-0 bottom-0 text-gray-200 font-light">${time}</span>
     </div>
 </div> `
 
@@ -47,6 +47,7 @@ const addMessage = async (event) => {
 
     let data = {
         message: inputMessage.value,
+        time:currentDate
     }
 
 
@@ -69,7 +70,7 @@ let source = new EventSource('/stream')
 source.addEventListener('add-message', (event) => {
     let data = JSON.parse(event.data);
     console.log(event);
-    addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message);
+    addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message,data.time);
     inputMessage.value = ""
 })
 

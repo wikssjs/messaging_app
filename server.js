@@ -196,12 +196,13 @@ app.post('/message',async(request,response)=>{
     else{
         if(request.body.message!=""){
 
-            await addMessage(request.body.message,request.user.id_utilisateur)    
+            await addMessage(request.body.message,request.user.id_utilisateur,request.body.time)    
              response.pushJson({
                  username: request.user.username,
                  message: request.body.message,
                  id_type_utilisateur: request.user.id_type_utilisateur,
                  id_message:request.body.id_message,
+                 time:request.body.time
              },'add-message');
         }
 

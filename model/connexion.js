@@ -19,6 +19,7 @@ promesseConnexion = promesseConnexion.then((connexion) => {
             id_message INTEGER PRIMARY KEY,
             message TEXT NOT NULL,
             id_utilisateur INTEGER NOT NULL,
+            time TEXT NOT NULL,
             CONSTRAINT fk_id_utilisateur 
             FOREIGN KEY (id_utilisateur)
             REFERENCES utilisateur_utilisateur(id_utilisateur) 

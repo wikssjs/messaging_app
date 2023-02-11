@@ -3,6 +3,15 @@
 @tailwind utilities;
 @import url('../node_modules/font-awesome/css/font-awesome.min.css');
 
+#message_wrapper::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+  }
+  
+  #message_wrapper::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color:#bbb;
+  }
 
 #btn-delete-message{
     background: none;
