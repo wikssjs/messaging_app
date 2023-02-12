@@ -1,15 +1,19 @@
 import sqlite3 from 'sqlite3';
-import {open} from 'sqlite';
+import { open } from 'sqlite';
+import {existsSync} from 'fs'
 
 let promesseConnexion = open({
     filename: process.env.DB_FILE,
     driver: sqlite3.Database
 });
 
-promesseConnexion = promesseConnexion.then((connexion) => {
-    connexion.exec(
-        
-        `
+const IS_NEW = !existsSync(process.env.DB_FILE);
+
+if (IS_NEW) {
+    promesseConnexion = promesseConnexion.then((connexion) => {
+        connexion.exec(
+
+            `
         CREATE TABLE IF NOT EXISTS type_utilisateur(
             id_type_utilisateur INTEGER PRIMARY KEY,
             type TEXT NOT NULL
@@ -20,11 +24,21 @@ promesseConnexion = promesseConnexion.then((connexion) => {
             message TEXT NOT NULL,
             id_utilisateur INTEGER NOT NULL,
             time TEXT NOT NULL,
+            id_room TEXT NOT NULL,
+            CONSTRAINT fk_id_rood 
+            FOREIGN KEY (id_room)
+            REFERENCES room(id_room) 
             CONSTRAINT fk_id_utilisateur 
             FOREIGN KEY (id_utilisateur)
             REFERENCES utilisateur_utilisateur(id_utilisateur) 
             ON DELETE SET NULL 
             ON UPDATE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS room(
+            id_room INTEGER PRIMARY KEY,
+            room_name TEXT UNIQUE NOT NULL,
+            image TEXT UNIQUE NOT NULL 
         );
 
         CREATE TABLE IF NOT EXISTS utilisateur (
@@ -37,11 +51,16 @@ promesseConnexion = promesseConnexion.then((connexion) => {
                 REFERENCES type_utilisateur(id_type_utilisateur) 
                 ON DELETE SET NULL 
                 ON UPDATE CASCADE
-        );`
+        );
+        
+        INSERT INTO room(room_name,image)values("JAVA","/img/java.png"),("HTML","/img/html.png"),("C#","/img/cs.png")
+        
+        `
 
-    )
 
-    return connexion;
-});
+        )
 
-export {promesseConnexion};
+        return connexion;
+    });
+}
+export { promesseConnexion };

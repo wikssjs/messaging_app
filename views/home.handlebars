@@ -1,129 +1,67 @@
 <!-- component -->
 <!-- This is an example component -->
-<div class="container mx-auto shadow-lg rounded-lg h-1/4">
-    <!-- headaer -->
+<div class="container mx-auto shadow-lg rounded-lg h-3/4 bg-white">
+    <!-- header -->
+    <div class="px-6 py-4 bg-indigo-500 text-white font-bold text-lg text-center">
+        Chatting
+    </div>
     <!-- end header -->
     <!-- Chatting -->
-    <div class="flex flex-row justify-between bg-black h-1/5">
+    <div class="wrapper flex flex-row justify-between">
         <!-- chat list -->
         <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
             <!-- search compt -->
             <div class="border-b-2 py-4 px-2">
                 <input type="text" placeholder="search chatting"
-                    class="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full" />
+                    class="py-2 px-2 border-2 border-indigo-300 rounded-2xl w-full" />
             </div>
             <!-- end search compt -->
             <!-- user list -->
-            <div class="flex flex-row py-4 px-2 justify-center items-center border-b-2">
+            
+            {{#each rooms}}
+            <button data-id_room="{{this.id_room}}" id="room_btn" data-room_name="{{this.room_name}}">
+
+            <div class="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-indigo-300 hover:bg-indigo-100">
                 <div class="w-1/4">
-                    <img src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
+                    <img src="{{{this.image}}}"
+                        class="object-cover h-12 w-12 rounded-full" alt=""/>
                 </div>
                 <div class="w-full">
-                    <div class="text-lg font-semibold">Luis1994</div>
-                    <span class="text-gray-500">Pick me at 9:00 Am</span>
-                </div>
-            </div>
-            <div class="flex flex-row py-4 px-2 items-center border-b-2">
-                <div class="w-1/4">
-                    <img src="https://source.unsplash.com/otT2199XwI8/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">Everest Trip 2021</div>
-                    <span class="text-gray-500">Hi Sam, Welcome</span>
-                </div>
-            </div>
-            <div class="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-blue-400">
-                <div class="w-1/4">
-                    <img src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">MERN Stack</div>
+                    <div class="text-lg font-semibold">{{this.room_name}}</div>
                     <span class="text-gray-500">Lusi : Thanks Everyone</span>
                 </div>
             </div>
-            <div class="flex flex-row py-4 px-2 items-center border-b-2">
-                <div class="w-1/4">
-                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">Javascript Indonesia</div>
-                    <span class="text-gray-500">Evan : some one can fix this</span>
-                </div>
-            </div>
-            <div class="flex flex-row py-4 px-2 items-center border-b-2">
-                <div class="w-1/4">
-                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">Javascript Indonesia</div>
-                    <span class="text-gray-500">Evan : some one can fix this</span>
-                </div>
-            </div>
-
-            <div class="flex flex-row py-4 px-2 items-center border-b-2">
-                <div class="w-1/4">
-                    <img src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        class="object-cover h-12 w-12 rounded-full" alt="" />
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">Javascript Indonesia</div>
-                    <span class="text-gray-500">Evan : some one can fix this</span>
-                </div>
-            </div>
+            </button>
+            {{/each}}
+          
             <!-- end user list -->
         </div>
         <!-- end chat list -->
         <!-- message -->
-        <div class="message_container w-full px-5 flex flex-col justify-between">
-            <div class="flex flex-col mt-5 overflow-y-scroll bg-blue-600" id="message_wrapper">
-                {{#each messages}}
-                <div class="flex justify-end mb-4 mt-5">
-                    <div class="w-full ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
-                        <span class=" text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
-                        <p class=" text-lg">{{this.message}}</p>
-
-                        <span class="absolute right-0 bottom-0 text-gray-200 font-light">{{this.time}}</span>
-                    </div>
-                </div>
-
-                {{!-- {{#isCurrentUser this.username}}
-                <div class="flex justify-end mb-4">
-                    <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
-                        <span>{{this.username}}</span>
-                        <p>{{this.message}}</p>
-
-                        <span class="ml-10">9-03Am</span>
-                    </div>
-                </div>
-                {{else}}
-                <div class="flex justify-end flex-row-reverse mb-4">
-                    <div class="mr-2 py-3 px-4 bg-red-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
-                        <span>{{this.username}}</span>
-                        <p>{{this.message}}</p>
-
-                        <span class="ml-10">9-03Am</span>
-
-                    </div>
-                </div>
-                {{/isCurrentUser}} --}}
-                {{/each}}
-            </div>
-            <div class="py-5">
-                <form id="message-form" action="" class="flex justify-between bg-red-">
-                    <input class="w-3/4 bg-gray-300 py-5 px-3 rounded-xl" type="text"
-                        placeholder="type your message here..." id="form-message-input" />
-                    <button type="submit" value="Envoyer" class="bg-blue-700 rounded w-1/5 text-lg hover:text-white"><i
-                            class="fa-solid fa-paper-plane text-xl"></i>
-                    </button>
-                </form>
-            </div>
+       <div class="message_container w-full px-5 flex flex-col justify-between"> 
+  <h1 class="text-center text-4xl text-white font-bold" id="titre">JAVA</h1>
+  <div class="flex flex-col mt-5 overflow-y-scroll bg-blue-600" id="message_wrapper">
+    {{#each messages}}
+      <div class="flex justify-end mb-4 mt-5">
+        <div class="w-full ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
+          <span class="text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
+          <p class="text-lg">{{this.message}}</p>
+          <span class="absolute right-0 bottom-0 text-gray-200 font-light">{{this.time}}</span>
         </div>
-        <!-- end message -->
+      </div>
+    {{/each}}
+  </div>
+  <div class="py-5">
+    <form id="message-form" action="" class="flex justify-between">
+      <input class="w-3/4 bg-white py-5 px-3 rounded-xl" type="text" placeholder="type your message here..." id="form-message-input" />
+      <button type="submit" value="Envoyer" class="bg-blue-700 text-white rounded w-1/5 py-3 px-4 text-lg hover:bg-blue-800">
+        <i class="fas fa-paper-plane text-lg"></i> SEND
+      </button>
+    </form>
+  </div>
+</div>
+<!-- end message -->
+
     </div>
 
 

@@ -9,11 +9,10 @@ import session from 'express-session';
 import memorystore from 'memorystore';
 import passport from 'passport';
 import middlewareSse from './middleware-sse.js';
-import {getMessages,addMessage,deleteMessage} from './model/todo.js';
+import {getMessages,addMessage,deleteMessage,getAllRooms} from './model/todo.js';
 import { addUtilisateur, isUserEquals } from './model/utilisateur.js';
 import { validateContact } from './validation.js';
 import './authentification.js';
-
 
 
 
@@ -55,7 +54,7 @@ app.set('views', './views');
 const MemoryStore = memorystore(session);
 
 // Ajout de middlewares
-app.use(helmet());
+app.use(helmet()); 
 app.use(cors());
 app.use(compression());
 app.use(json());
@@ -72,21 +71,24 @@ app.use(passport.session());
 app.use(middlewareSse());
 app.use(express.static('public'));
 
+console.log(await getMessages(1))
+
 // Programmation de routes
 app.get('/', async (request, response) => {
     
     let a = await getMessages();
     if(request.user){
-        console.log(await isUserEquals(request.user.username));
+
         response.render('home', {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js',"/css/main.css"],
             user: request.user,
             isAdmin:request.user?.id_type_utilisateur>1,
-            messages:await getMessages(),
+            messages:await getMessages(1),
             accept: request.session.accept,
             isCurrentUser: await isUserEquals(request.user.username) ,
-            currentUser:request.user.username
+            currentUser:request.user.username,
+            rooms:await getAllRooms()
         });
     }
     else{
@@ -95,16 +97,21 @@ app.get('/', async (request, response) => {
     
 })
 
+app.get('/message',async (req,res)=>{
+    const {id=1} = req.query;
+    console.log(await getMessages(id))
+    res.json(await getMessages(id));
+})
+
 app.get('/home', async (request, response) => {
 
-    console.log(await isUserEquals(request.user.username))
     if(request.user){
         response.render('home', {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js'],
             user: request.user,
             isAdmin:request.user?.id_type_utilisateur>1,
-            messages:await getMessages(),
+            messages:await getMessages(1),
             accept: request.session.accept,
             isCurrentUser: await isUserEquals(request.user.username) ,
         });
@@ -196,13 +203,14 @@ app.post('/message',async(request,response)=>{
     else{
         if(request.body.message!=""){
 
-            await addMessage(request.body.message,request.user.id_utilisateur,request.body.time)    
+            await addMessage(request.body.message,request.user.id_utilisateur,request.body.time,request.body.id_room)    
              response.pushJson({
                  username: request.user.username,
                  message: request.body.message,
                  id_type_utilisateur: request.user.id_type_utilisateur,
                  id_message:request.body.id_message,
-                 time:request.body.time
+                 time:request.body.time,
+                 id_room:request.body.id_room
              },'add-message');
         }
 
