@@ -71,7 +71,6 @@ app.use(passport.session());
 app.use(middlewareSse());
 app.use(express.static('public'));
 
-console.log(await getMessages(1))
 
 // Programmation de routes
 app.get('/', async (request, response) => {
@@ -99,7 +98,6 @@ app.get('/', async (request, response) => {
 
 app.get('/message',async (req,res)=>{
     const {id=1} = req.query;
-    console.log(await getMessages(id))
     res.json(await getMessages(id));
 })
 
@@ -279,7 +277,6 @@ app.post('/connexion', (request, response, next) => {
                     }
                     else {
                         users.push(utilisateur.username)
-                        console.log(users)
                         response.status(200).end();
                     }
                 });

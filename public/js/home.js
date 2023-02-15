@@ -18,9 +18,7 @@ const date = new Date();
 let currentDate = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
 export const addMessageCLient = (username, txtMessage, idTypeUtilisateur, idMessage, time) => {
-    console.log(username)
     // let deleteElement;
-    // console.log(idTypeUtilisateur);
     // if (idTypeUtilisateur > 1) {
 
     //     deleteElement = ` <button id="btn-delete-message" data-id="${idMessage}" class="p-2 text-danger justify-content-between">Delete</button>`;
@@ -94,7 +92,6 @@ let source = new EventSource('/stream')
 
 source.addEventListener('add-message', (event) => {
     let data = JSON.parse(event.data);
-    console.log(event);
     addMessageCLient(data.username, data.message, data.id_type_utilisateur, data.id_message, data.time);
     inputMessage.value = ""
 })
@@ -114,7 +111,6 @@ let source1 = new EventSource('/stream1')
 
 source1.addEventListener('delete-message', (event) => {
     let data = JSON.parse(event.data);
-    console.log(data);
     deleteMessageClient(data.id_message);
 })
 

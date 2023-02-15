@@ -5,7 +5,6 @@ import {promesseConnexion} from './connexion.js';
 
 export const getMessages = async(id)=>{
 
-    console.log(id + "kakskkskksks")
 
     do{
 
@@ -18,7 +17,8 @@ export const getMessages = async(id)=>{
 
 export const getAllRooms = async ()=>{
     let connexion = await promesseConnexion;
-    let resultat = await connexion.all(`select * from room`)
+    let resultat = await connexion.all(`select r.id_room,room_name,image,message from room r
+                                        join message m on m.id_room = r.id_room `)
 
     return resultat
 

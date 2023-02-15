@@ -11,7 +11,6 @@ formAuth.addEventListener('submit', async (event) => {
     }
 
 
-    console.log(data);
 
     let response = await fetch('/connexion', {
         method: 'POST',
@@ -26,7 +25,6 @@ formAuth.addEventListener('submit', async (event) => {
         let info = await response.json();
 
         // Afficher erreur dans l'interface graphique
-        console.log(info);
     }
     else {
         console.log('Erreur inconnu');
