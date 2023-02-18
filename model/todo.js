@@ -17,8 +17,8 @@ export const getMessages = async(id)=>{
 
 export const getAllRooms = async ()=>{
     let connexion = await promesseConnexion;
-    let resultat = await connexion.all(`select r.id_room,room_name,image,message from room r
-                                        join message m on m.id_room = r.id_room `)
+    let resultat = await connexion.all(`select r.id_room,r.room_name,image from room r
+                                        `);
 
     return resultat
 

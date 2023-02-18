@@ -16,7 +16,6 @@ import './authentification.js';
 
 
 
-let users=[];
 // Création du serveur web
 let app = express();
 // Création de l'engin dans Express
@@ -72,6 +71,7 @@ app.use(middlewareSse());
 app.use(express.static('public'));
 
 
+console.log(await getAllRooms())
 // Programmation de routes
 app.get('/', async (request, response) => {
     
@@ -276,7 +276,6 @@ app.post('/connexion', (request, response, next) => {
                         next(error);
                     }
                     else {
-                        users.push(utilisateur.username)
                         response.status(200).end();
                     }
                 });
