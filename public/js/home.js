@@ -44,7 +44,7 @@ export const addMessageCLient = async (username, txtMessage, idTypeUtilisateur, 
 
             container.innerHTML += ` 
         <div class="flex justify-end mb-4 mt-5" data-id_message="${idMessage}">
-        <div class="w-1/2 ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
+        <div class="w-1/3 ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
         ${deleteElement}
             <span class=" text-red-800 text-xl font-bold pb-5">${username}</span>
             <p class=" text-lg">${txtMessage}</p>

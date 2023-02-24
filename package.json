@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "npx tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch"
+    "test": "npx tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch",
+    "build":"./node_modules/.bin/netlify-lambda build public"
   },
   "author": "James Bell",
   "license": "ISC",
