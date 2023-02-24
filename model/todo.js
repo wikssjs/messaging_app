@@ -1,21 +1,21 @@
-import {promesseConnexion} from './connexion.js';
+import { promesseConnexion } from './connexion.js';
 
 
 
 
-export const getMessages = async(id)=>{
+export const getMessages = async (id) => {
 
-
-    do{
+    let resultat;
+    do {
 
         let connexion = await promesseConnexion;
-        let resultat = await connexion.all(`select id_message,message,username,id_type_utilisateur,time,id_room from message m,utilisateur u
-                                                            where m.id_utilisateur = u.id_utilisateur and id_room = ?`,[id]);
-                                                            return resultat;
-    }while(id === undefined)
+        resultat = await connexion.all(`select id_message,message,username,id_type_utilisateur,time,m.id_room from message m,utilisateur u
+                                                            where m.id_utilisateur = u.id_utilisateur and m.id_room = ?`, [id]);
+    } while (id === undefined)
+    return resultat;
 }
 
-export const getAllRooms = async ()=>{
+export const getAllRooms = async () => {
     let connexion = await promesseConnexion;
     let resultat = await connexion.all(`select r.id_room,r.room_name,image from room r
                                         `);
@@ -24,18 +24,18 @@ export const getAllRooms = async ()=>{
 
 }
 
-export const addMessage = async (message,id_utilisateur,time,id_room)=>{
+export const addMessage = async (message, id_utilisateur, time, id_room) => {
     let connexion = await promesseConnexion;
     connexion.run(
         `InSERT INTO message (message,id_utilisateur,time,id_room)
-        Values(?,?,?,?)`,[message,id_utilisateur,time,id_room]
+        Values(?,?,?,?)`, [message, id_utilisateur, time, id_room]
     )
 }
 
-export const deleteMessage = async (idMessage) =>{
+export const deleteMessage = async (idMessage, idRoom) => {
     let connexion = await promesseConnexion;
 
     connexion.run(
-        `Delete from message where id_message = ?`,[idMessage]
-    ) 
+        `Delete from message where id_message = ? and id_room = ?`, [idMessage, idRoom]
+    )
 }

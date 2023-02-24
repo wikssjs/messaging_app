@@ -71,18 +71,14 @@ app.use(middlewareSse());
 app.use(express.static('public'));
 
 
-console.log(await getAllRooms())
 // Programmation de routes
 app.get('/', async (request, response) => {
-    
-    let a = await getMessages();
-    if(request.user){
-
+        if(request.user){
         response.render('home', {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js',"/css/main.css"],
             user: request.user,
-            isAdmin:request.user?.id_type_utilisateur>1,
+            admin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(1),
             accept: request.session.accept,
             isCurrentUser: await isUserEquals(request.user.username) ,
@@ -95,10 +91,9 @@ app.get('/', async (request, response) => {
     }
     
 })
-
 app.get('/message',async (req,res)=>{
     const {id=1} = req.query;
-    res.json(await getMessages(id));
+    res.send(await getMessages(id));
 })
 
 app.get('/home', async (request, response) => {
@@ -108,7 +103,7 @@ app.get('/home', async (request, response) => {
             titre: 'Groupe Conversation',
             scripts: ['/js/home.js'],
             user: request.user,
-            isAdmin:request.user?.id_type_utilisateur>1,
+            admin:request.user?.id_type_utilisateur>1,
             messages:await getMessages(1),
             accept: request.session.accept,
             isCurrentUser: await isUserEquals(request.user.username) ,
@@ -120,9 +115,9 @@ app.get('/home', async (request, response) => {
     
 })
 
-app.delete('/home',async (request,response)=>{
-    if(request.user?.id_utilisateur>1){
-        deleteMessage(request.body.idMessage)
+app.delete('/',async (request,response)=>{
+    if(request.user?.id_type_utilisateur>1){
+        await deleteMessage(request.body.idMessage,request.body.idRoom)
 
     }
     response.pushJson({
@@ -208,13 +203,18 @@ app.post('/message',async(request,response)=>{
                  id_type_utilisateur: request.user.id_type_utilisateur,
                  id_message:request.body.id_message,
                  time:request.body.time,
-                 id_room:request.body.id_room
+                 id_room:request.body.id_room,
+                 room_name:request.body.room_name
              },'add-message');
         }
 
     }
 
 
+})
+
+app.get('/user',(req,res)=>{
+    res.send(req.user)
 })
 
 app.get('/stream', (request, response) => {

@@ -1,65 +1,84 @@
 <!-- component -->
 <!-- This is an example component -->
-<div class="container mx-auto shadow-lg rounded-lg h-3/4 bg-white">
-    <!-- header -->
-    <!-- end header -->
-    <!-- Chatting -->
-    <div class="wrapper flex flex-row justify-between">
-        <!-- chat list -->
-        <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
-            <!-- search compt -->
-            <div class="border-b-2 py-4 px-2">
-                <input type="text" placeholder="search chatting"
-                    class="py-2 px-2 border-2 border-indigo-300 rounded-2xl w-full" />
-            </div>
-            <!-- end search compt -->
-            <!-- user list -->
-            
-            {{#each rooms}}
-            <button data-id_room="{{this.id_room}}" id="room_btn" data-room_name="{{this.room_name}}">
-
-            <div class="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-indigo-300 hover:bg-indigo-100">
-                <div class="w-1/4">
-                    <img src="{{{this.image}}}"
-                        class="object-cover h-12 w-12 rounded-full" alt=""/>
-                </div>
-                <div class="w-full">
-                    <div class="text-lg font-semibold">{{this.room_name}}</div>
-                    <span class="text-gray-500">{{this.message}}</span>
-                </div>
-            </div>
-            </button>
-            {{/each}}
-          
-            <!-- end user list -->
-        </div>
-        <!-- end chat list -->
-        <!-- message -->
-       <div class="message_container w-full px-5 flex flex-col justify-between"> 
-  <h1 class="text-center text-4xl text-white font-bold" id="titre">JAVA</h1>
-  <div class="flex flex-col mt-5 overflow-y-scroll bg-blue-600" id="message_wrapper">
-    {{#each messages}}
-      <div class="flex justify-end mb-4 mt-5">
-        <div class="w-full ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
-          <span class="text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
-          <p class="text-lg">{{this.message}}</p>
-          <span class="absolute right-0 bottom-0 text-gray-200 font-light">{{this.time}}</span>
-        </div>
+<div class="container mx-auto shadow-lg rounded-lg h-3/4">
+  <!-- header -->
+  <!-- end header -->
+  <!-- Chatting -->
+  <div class="wrapper flex flex-row justify-between">
+    <!-- chat list -->
+    <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+      <!-- search compt -->
+      <div class="border-b-2 py-4 px-2">
+        <h1 class="text-center text-4xl text-white font-bold">ROOMS</h1>
       </div>
-    {{/each}}
-  </div>
-  <div class="py-5">
-    <form id="message-form" action="" class="flex justify-between">
-      <input class="w-3/4 bg-white py-5 px-3 rounded-xl" type="text" placeholder="type your message here..." id="form-message-input" />
-      <button type="submit" value="Envoyer" class="bg-blue-700 text-white rounded w-1/5 py-3 px-4 text-lg hover:bg-blue-800">
-        <i class="fas fa-paper-plane text-lg"></i> SEND
-      </button>
-    </form>
-  </div>
-</div>
-<!-- end message -->
+      <!-- end search compt -->
+      <!-- user list -->
 
+      {{#each rooms}}
+      <button data-id_room="{{this.id_room}}" id="room_btn" data-room_name="{{this.room_name}}">
+
+        <div class="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-indigo-300 hover:bg-indigo-100">
+          <div class="w-1/4">
+            <img src="{{{this.image}}}" class="object-cover h-12 w-12 rounded-full" alt="" />
+          </div>
+          <div class="w-full">
+            <div class="text-lg font-semibold">{{this.room_name}}</div>
+            <span class="text-gray-500">{{this.message}}</span>
+          </div>
+        </div>
+      </button>
+      {{/each}}
+
+      <!-- end user list -->
     </div>
+    <!-- end chat list -->
+    <!-- message -->
+    <div class="message_container w-full px-5 flex flex-col justify-between">
+      <h1 class="text-center text-4xl text-white font-bold" id="titre">JAVA</h1>
+      <div class="flex flex-col mt-5 overflow-y-scroll bg-blue-600" id="message_wrapper" data-room_name="JAVA">
+        {{#each messages}}
+
+        {{#isCurrentUser this.username}}
+        <div id="allMessages" class="flex justify-end mb-4 mt-5" data-id_message="{{this.id_message}}">
+          <div class=" w-1/3 ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
+            {{#if ../admin}}
+            <button id="btn-delete" data-id_message="{{this.id_message}}" data-id_room="{{this.id_room}}"
+              class=" bg-red-600 absolute px-5 py-1 shadow-lg rounded-lg">Delete</button>
+            {{/if}}
+            <span class="text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
+            <p class="text-lg">{{this.message}}</p>
+            <span id="heure" class="absolute text-gray-200 font-light">{{this.time}}</span>
+          </div>
+        </div>
+
+        {{else}}
+        <div id="allMessages" class="flex flex-row-reverse justify-end mb-4 mt-5" data-id_message="{{this.id_message}}">
+          <div class=" w-1/3 ml-10 mr-2 py-3 px-4 bg-blue-400 text-white rounded-lg shadow-lg relative">
+            {{#if ../admin}}
+            <button id="btn-delete" data-id_message="{{this.id_message}}" data-id_room="{{this.id_room}}"
+              class=" bg-red-600 absolute px-5 py-1 shadow-lg rounded-lg">Delete</button>
+            {{/if}}
+            <span class="text-red-800 text-xl font-bold pb-5">{{this.username}}</span>
+            <p class="text-lg">{{this.message}}</p>
+            <span id="heure" class="absolute text-gray-200 font-light">{{this.time}}</span>
+          </div>
+        </div> {{/isCurrentUser}}
+        {{/each}}
+      </div>
+      <div class="py-5">
+        <form id="message-form" action="" class="flex justify-between">
+          <input class="w-3/4 bg-white py-5 px-3 rounded-xl" type="text" placeholder="type your message here..."
+            id="form-message-input" />
+          <button type="submit" value="Envoyer"
+            class="bg-blue-700 text-white rounded w-1/5 py-3 px-4 text-lg hover:bg-blue-800">
+            <i class="fas fa-paper-plane text-lg"></i> SEND
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- end message -->
+
+  </div>
 
 
 </div>

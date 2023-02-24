@@ -53,8 +53,8 @@ if (IS_NEW) {
                 ON UPDATE CASCADE
         );
         
-        INSERT INTO room(room_name,image)values("JAVA","/img/java.png"),("HTML","/img/html.png"),("C#","/img/cs.png")
-        
+        INSERT INTO room(room_name,image)values("JAVA","/img/java.png"),("HTML","/img/html.png"),("C#","/img/cs.png");
+        INSERT INTO type_utilisateur (id_type_utilisateur,type) values(1,'regulier'),(2,'admin')
         `
 
 
