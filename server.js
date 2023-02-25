@@ -14,8 +14,6 @@ import { addUtilisateur, isUserEquals } from './model/utilisateur.js';
 import { validateContact } from './validation.js';
 import './authentification.js';
 
-
-
 // Création du serveur web
 let app = express();
 // Création de l'engin dans Express
@@ -54,6 +52,14 @@ const MemoryStore = memorystore(session);
 
 // Ajout de middlewares
 app.use(helmet()); 
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        "script-src": ["'self'"],
+        "script-src-attr": ["'unsafe-inline'"],
+      },
+    })
+  );
 app.use(cors());
 app.use(compression());
 app.use(json());
@@ -196,7 +202,8 @@ app.post('/message',async(request,response)=>{
     else{
         if(request.body.message!=""){
 
-            await addMessage(request.body.message,request.user.id_utilisateur,request.body.time,request.body.id_room)    
+            let id = await addMessage(request.body.message,request.user.id_utilisateur,request.body.time,request.body.id_room)    
+            console.log(id)
              response.pushJson({
                  username: request.user.username,
                  message: request.body.message,
@@ -204,7 +211,8 @@ app.post('/message',async(request,response)=>{
                  id_message:request.body.id_message,
                  time:request.body.time,
                  id_room:request.body.id_room,
-                 room_name:request.body.room_name
+                 room_name:request.body.room_name,
+                 id_message : id.lastID
              },'add-message');
         }
 

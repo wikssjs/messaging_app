@@ -26,10 +26,12 @@ export const getAllRooms = async () => {
 
 export const addMessage = async (message, id_utilisateur, time, id_room) => {
     let connexion = await promesseConnexion;
-    connexion.run(
+    let id = connexion.run(
         `InSERT INTO message (message,id_utilisateur,time,id_room)
         Values(?,?,?,?)`, [message, id_utilisateur, time, id_room]
     )
+
+    return id
 }
 
 export const deleteMessage = async (idMessage, idRoom) => {
