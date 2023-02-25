@@ -1,3 +1,7 @@
+#toggle{
+    display: none;
+}
+
 li{
     color: white;
     font-size: 1.5em;
@@ -7,3 +11,54 @@ li{
     background: none;
     margin-top: 10px;
 }
+
+.navbar-toggle {
+    display: none; 
+    cursor: pointer;
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  
+  .toggle-line {
+    width: 30px;
+    height: 3px;
+    background-color: wheat;
+    margin: 5px 0;
+    transition: .4s;
+
+  }
+
+  input:checked ~ .rooms{
+    transform: translateX(0);
+  }
+
+  input:checked ~ .navbar-toggle .toggle-line:nth-child(1){
+    transform: rotate(45deg);
+    position: absolute;
+  }
+
+  input:checked ~ .navbar-toggle .toggle-line:nth-child(2){
+    display: none;
+  }
+
+  input:checked ~ .navbar-toggle .toggle-line:nth-child(3){
+    position: absolute;
+
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width:768px){
+    
+    .navbar-toggle{
+        display: block;
+    }
+
+    .rooms{
+        display: grid;
+        position: absolute;
+        transform: translateX(-150%);
+        transition: .6s;
+        top: 11.5%;
+        background-color: #333;
+    }
+  }
