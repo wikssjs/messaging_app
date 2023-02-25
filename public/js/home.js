@@ -68,7 +68,9 @@ export const addMessageCLient = async (username, txtMessage, idTypeUtilisateur, 
     }
     
     container.scrollTop = container.scrollHeight
-    document.getElementById(`zozokale${idMessage}`).appendChild(deleteButton);
+    if(user.id_type_utilisateur>1){
+        document.getElementById(`zozokale${idMessage}`).appendChild(deleteButton);
+    }
 
 
 
@@ -247,7 +249,10 @@ async function getRoomMessages(id, name) {
             </div>
         </div> `
         }
-        document.getElementById(`delete${i}`).appendChild(deleteButton)
+        if(user.id_type_utilisateur>1){
+
+            document.getElementById(`delete${i}`).appendChild(deleteButton)
+        }
     }
     let deleteButtons = document.querySelectorAll('#btn-delete');
     for(let i = 0;i<deleteButtons.length;i++){
