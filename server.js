@@ -203,7 +203,6 @@ app.post('/message',async(request,response)=>{
         if(request.body.message!=""){
 
             let id = await addMessage(request.body.message,request.user.id_utilisateur,request.body.time,request.body.id_room)    
-            console.log(id)
              response.pushJson({
                  username: request.user.username,
                  message: request.body.message,
